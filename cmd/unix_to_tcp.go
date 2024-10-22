@@ -39,13 +39,11 @@ func NewUnixToTCPCmd(logger logger.Logger) *cobra.Command {
 		Short: "relay from a unix source to tcp clients",
 		Long:  `relay from a unix source to tcp clients`,
 		RunE: func(command *cobra.Command, args []string) error {
-			// nolint: gocritic
-			if len(unixToTCPSocketPath) < 0 {
+			if len(unixToTCPSocketPath) == 0 {
 				return stacktrace.NewError("blank/empty `src` specified")
 			}
 
-			// nolint: gocritic
-			if len(unixToTCPAddressPath) < 0 {
+			if len(unixToTCPAddressPath) == 0 {
 				return stacktrace.NewError("blank/empty `dst` specified")
 			}
 
@@ -83,8 +81,8 @@ func NewUnixToTCPCmd(logger logger.Logger) *cobra.Command {
 	cmdInstance.Flags().DurationVar(
 		&unixToTCPHealthCheckDuration,
 		"health-check-interval",
-		30*time.Second,
-		"health check interval for `src`, e.g values are 30m, 60s, 1h.",
+		0,
+		"health check interval for `src`, e.g values are 30m, 60s, 1h. Set 0 to disable this feature.",
 	)
 	cmdInstance.Flags().StringVar(
 		&unixToTCPSocketPath,

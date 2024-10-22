@@ -43,8 +43,11 @@ func (r *AbstractDuplexRelay) Relay(ctx context.Context) error {
 	}
 	defer listener.Close()
 
-	ctx, cancel := context.WithCancel(ctx)
-	go r.healthCheckSource(ctx, cancel)
+	// Don't do health check when interval is zero.
+	if r.healthCheckInterval != time.Duration(0) {
+		ctx, cancel := context.WithCancel(ctx)
+		go r.healthCheckSource(ctx, cancel)
+	}
 	go func() {
 		<-ctx.Done()
 		listener.Close()
