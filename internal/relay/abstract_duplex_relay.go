@@ -16,6 +16,7 @@ package relay
 
 import (
 	"context"
+	"errors"
 	"io"
 	"net"
 	"sync"
@@ -108,7 +109,6 @@ func (r *AbstractDuplexRelay) healthCheckSource(ctx context.Context, cancel cont
 	}
 }
 
-// nolint:funlen
 func (r *AbstractDuplexRelay) handleConnection(ctx context.Context, conn net.Conn) {
 	defer func(conn net.Conn) {
 		_ = conn.Close()
@@ -152,7 +152,7 @@ func (r *AbstractDuplexRelay) handleConnection(ctx context.Context, conn net.Con
 				// the "destination read to source write" goroutine.
 				destDeadlineConn.Close()
 
-				if err == io.EOF {
+				if errors.Is(err, io.EOF) {
 					r.logger.Debugf(
 						"Reached EOF of %s %s. Stopping reading",
 						r.sourceName,
@@ -189,7 +189,7 @@ func (r *AbstractDuplexRelay) handleConnection(ctx context.Context, conn net.Con
 			// the "source read to dest write" goroutine.
 			sourceConn.Close()
 
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				r.logger.Debugf(
 					"Reached EOF of %s %s. Stopping reading",
 					r.destinationName,

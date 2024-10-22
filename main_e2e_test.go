@@ -18,18 +18,19 @@ import (
 	"bytes"
 	"context"
 	"fmt"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
-	"github.com/sumup-oss/go-pkgs/os"
-	"github.com/sumup-oss/go-pkgs/task"
-	"github.com/sumup-oss/go-pkgs/testutils"
-	gocatTesting "github.com/sumup-oss/gocat/internal/testing"
 	"io/ioutil"
 	"net"
 	stdOs "os"
 	"os/exec"
 	"testing"
 	"time"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/stretchr/testify/require"
+	"github.com/sumup-oss/go-pkgs/os"
+	"github.com/sumup-oss/go-pkgs/task"
+	"github.com/sumup-oss/go-pkgs/testutils"
+	gocatTesting "github.com/sumup-oss/gocat/internal/testing"
 )
 
 var (
@@ -716,7 +717,7 @@ func BenchmarkUnixToTCPParallel_Socat(b *testing.B) {
 
 func prepareGocatTCPToUnixTest(
 	ctx context.Context,
-	t gocatTesting.TestingT,
+	t gocatTesting.T,
 	bufferSize int,
 ) *gocatTesting.UnixSocketClient {
 	binaryBuild := testutils.NewBuild(gocatBinaryPath, "")
@@ -781,7 +782,7 @@ func prepareGocatTCPToUnixTest(
 
 func prepareSocatTCPToUnixTest(
 	ctx context.Context,
-	t gocatTesting.TestingT,
+	t gocatTesting.T,
 	bufferSize int,
 ) *gocatTesting.UnixSocketClient {
 	fd, err := ioutil.TempFile("", "socat-tcp-to-unix-test")
@@ -851,7 +852,7 @@ func prepareSocatTCPToUnixTest(
 
 func prepareSocatUnixToTCPTest(
 	ctx context.Context,
-	t gocatTesting.TestingT,
+	t gocatTesting.T,
 	bufferSize int,
 ) *gocatTesting.TCPClient {
 	l, err := net.Listen("tcp", "127.0.0.1:0")
@@ -924,7 +925,7 @@ func prepareSocatUnixToTCPTest(
 
 func prepareGocatUnixToTCPTest(
 	ctx context.Context,
-	t gocatTesting.TestingT,
+	t gocatTesting.T,
 	bufferSize int,
 ) *gocatTesting.TCPClient {
 	binaryBuild := testutils.NewBuild(gocatBinaryPath, "")

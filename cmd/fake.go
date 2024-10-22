@@ -20,9 +20,8 @@ import (
 	"time"
 
 	"github.com/palantir/stacktrace"
-	"github.com/sumup-oss/go-pkgs/logger"
-
 	"github.com/spf13/cobra"
+	"github.com/sumup-oss/go-pkgs/logger"
 )
 
 func NewFakeCmd(logger logger.Logger) *cobra.Command {
@@ -30,7 +29,7 @@ func NewFakeCmd(logger logger.Logger) *cobra.Command {
 		Use:   "fake",
 		Short: "fake unix domain socket server",
 		Long:  `fake unix domain socket server`,
-		RunE: func(command *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			_ = os.Remove("./test.sock")
 			l, err := net.Listen("unix", "./test.sock")
 			if err != nil {
@@ -48,6 +47,7 @@ func NewFakeCmd(logger logger.Logger) *cobra.Command {
 
 				go func(innerConn net.Conn) {
 					for {
+						//nolint:dupword
 						_, _ = innerConn.Write([]byte("MOSHI MOSHI"))
 						time.Sleep(1 * time.Second)
 					}

@@ -15,14 +15,13 @@
 package cmd
 
 import (
+	"github.com/spf13/cobra"
 	"github.com/sumup-oss/go-pkgs/logger"
 	"github.com/sumup-oss/go-pkgs/os"
-
-	"github.com/spf13/cobra"
 )
 
 const (
-	// NOTE: 16k since Linux OS is mostly setting this
+	// NOTE: 16k since Linux OS is mostly setting this.
 	DefaultBufferSize = 16384
 )
 
@@ -36,7 +35,7 @@ func NewRootCmd(osExecutor os.OsExecutor, logger logger.Logger) *cobra.Command {
 		// that it's going to log either way.
 		SilenceErrors: true,
 		SilenceUsage:  true,
-		RunE: func(cmd *cobra.Command, args []string) error {
+		RunE: func(cmd *cobra.Command, _ []string) error {
 			return cmd.Help()
 		},
 	}

@@ -80,6 +80,7 @@ func NewTCPtoUnixSocket(
 					)
 				}
 
+				//nolint:forcetypeassert
 				tcpConn := conn.(*net.TCPConn)
 				// TODO: Re-evaluate if this is redundant when `KeepAlive` and `net.Dialer` is used.
 				_ = tcpConn.SetKeepAlive(true)

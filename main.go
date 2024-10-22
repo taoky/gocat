@@ -19,7 +19,6 @@ import (
 
 	log "github.com/sumup-oss/go-pkgs/logger"
 	"github.com/sumup-oss/go-pkgs/os"
-
 	"github.com/sumup-oss/gocat/cmd"
 	"github.com/sumup-oss/gocat/internal/config"
 )
@@ -28,8 +27,7 @@ func main() {
 	osExecutor := &os.RealOsExecutor{}
 	configInstance, err := config.NewConfig()
 	if err != nil {
-		//nolint:errcheck,staticcheck
-		fmt.Fprintf(osExecutor.Stderr(), err.Error())
+		fmt.Fprintln(osExecutor.Stderr(), err.Error())
 		osExecutor.Exit(1)
 	}
 
@@ -56,7 +54,6 @@ func main() {
 		return
 	}
 
-	//nolint:errcheck,staticcheck
-	fmt.Fprintf(osExecutor.Stderr(), err.Error())
+	fmt.Fprintln(osExecutor.Stderr(), err.Error())
 	osExecutor.Exit(1)
 }

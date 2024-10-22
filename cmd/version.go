@@ -26,7 +26,7 @@ func NewVersionCmd(osExecutor os.OsExecutor) *cobra.Command {
 		Use:   "version",
 		Short: "Print the version of gocat",
 		Long:  `Print the version of gocat.`,
-		RunE: func(command *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			_, _ = fmt.Fprintln(osExecutor.Stdout(), "0.2.0")
 			return nil
 		},

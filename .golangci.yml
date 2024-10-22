@@ -5,7 +5,8 @@ run:
   modules-download-mode: readonly
 
 output:
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
   print-issued-lines: true
   print-linter-name: true
 
@@ -17,7 +18,7 @@ linters-settings:
 
   # print linter name in the end of issue text, default is true
   govet:
-    check-shadowing: true
+    shadow: true
   gocyclo:
     # NOTE: Too-low cyclomatic complexity value
     # results into worse code design and readability.
@@ -30,13 +31,13 @@ linters-settings:
     min-len: 2
     min-occurrences: 2
   depguard:
-    list-type: blacklist
-    packages:
-      # logging is allowed only by logutils.Log, logrus
-      # is allowed to use only in logutils package
-      - github.com/sirupsen/logrus
-      # NOTE: Be very, very wary not to use GPL3 software as library
-      - github.com/golangci/golangci-lint
+    rules:
+      main:
+        deny:
+        - pkg: "github.com/sirupsen/logrus"
+          desc: "logging is allowed only by logutils.Log, logrus is allowed to use only in logutils package"
+        - pkg: "github.com/golangci/golangci-lint"
+          desc: "NOTE: Be very, very wary not to use GPL3 software as library"
   misspell:
     locale: US
   lll:
@@ -50,12 +51,6 @@ linters-settings:
 linters:
   enable-all: true
   disable:
-    # NOTE: Currently impossible to calculate the optimal order
-    # Can be enabled when https://github.com/mdempsky/maligned/issues/9 is merged.
-    - maligned
-    # NOTE: "effective" golang style is full of arguable practices.
-    # We don't need that and besides gofmt does the required minimum of style modifications.
-    - golint
     # NOTE: Too much false positives
     - unparam
     # NOTE: It's a great linter, but gets in the way too often by not being customizable.
@@ -68,6 +63,15 @@ linters:
     - funlen
     - godox
     - dupl
+    - execinquery
+    - exportloopref
+    - varnamelen
+    - mnd
+    - nlreturn
+    - exhaustruct
+    - cyclop
+    - interfacebloat
+    - wrapcheck
 issues:
   exclude-rules:
     - text: "weak cryptographic primitive"

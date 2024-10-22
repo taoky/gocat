@@ -15,8 +15,8 @@
 package testing
 
 import (
+	"errors"
 	"io"
-	"io/ioutil"
 	"net"
 	"os"
 
@@ -25,10 +25,10 @@ import (
 
 type UnixServer struct {
 	bufferSize int
-	t          TestingT
+	t          T
 }
 
-func NewUnixServer(t TestingT, bufferSize int) *UnixServer {
+func NewUnixServer(t T, bufferSize int) *UnixServer {
 	return &UnixServer{
 		bufferSize: bufferSize,
 		t:          t,
@@ -36,10 +36,10 @@ func NewUnixServer(t TestingT, bufferSize int) *UnixServer {
 }
 
 func (us *UnixServer) Serve(started chan<- *ListenResult) {
-	fd, err := ioutil.TempFile("", "unix-server")
-	require.Nil(us.t, err, "Failed to create tempfile")
+	fd, err := os.CreateTemp("", "unix-server")
+	require.NoError(us.t, err, "Failed to create tempfile")
 	err = os.RemoveAll(fd.Name())
-	require.Nil(us.t, err, "Failed to remove tempfile")
+	require.NoError(us.t, err, "Failed to remove tempfile")
 
 	ln, err := net.Listen("unix", fd.Name())
 	if err != nil {
@@ -68,7 +68,7 @@ func (us *UnixServer) Serve(started chan<- *ListenResult) {
 
 	for {
 		c, err := ln.Accept()
-		require.Nil(us.t, err, "Failed to accept connection")
+		require.NoError(us.t, err, "Failed to accept connection")
 
 		go us.handleConnection(c)
 	}
@@ -81,7 +81,7 @@ func (us *UnixServer) handleConnection(c net.Conn) {
 	for {
 		readBytes, err := c.Read(buffer)
 		if err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				return
 			}
 
@@ -95,7 +95,7 @@ func (us *UnixServer) handleConnection(c net.Conn) {
 
 		msg := buffer[:readBytes]
 		writtenBytes, err := c.Write(msg)
-		require.Nil(us.t, err, "Failed to write data")
+		require.NoError(us.t, err, "Failed to write data")
 
 		expectedWrittenBytes := len(msg)
 		if expectedWrittenBytes != writtenBytes {

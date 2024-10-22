@@ -24,7 +24,6 @@ import (
 	"github.com/palantir/stacktrace"
 	"github.com/spf13/cobra"
 	"github.com/sumup-oss/go-pkgs/logger"
-
 	"github.com/sumup-oss/gocat/internal/relay"
 )
 
@@ -38,7 +37,7 @@ func NewUnixToTCPCmd(logger logger.Logger) *cobra.Command {
 		Use:   "unix-to-tcp",
 		Short: "relay from a unix source to tcp clients",
 		Long:  `relay from a unix source to tcp clients`,
-		RunE: func(command *cobra.Command, args []string) error {
+		RunE: func(_ *cobra.Command, _ []string) error {
 			if len(unixToTCPSocketPath) == 0 {
 				return stacktrace.NewError("blank/empty `src` specified")
 			}

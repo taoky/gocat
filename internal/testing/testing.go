@@ -14,7 +14,7 @@
 
 package testing
 
-type TestingT interface {
+type T interface {
 	Error(args ...interface{})
 	Errorf(format string, args ...interface{})
 	Fail()

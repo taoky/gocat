@@ -20,7 +20,7 @@ import (
 )
 
 type Config struct {
-	LogLevel string `envconfig:"LOG_LEVEL" default:"INFO"`
+	LogLevel string `default:"INFO" envconfig:"LOG_LEVEL"`
 }
 
 func NewConfig() (*Config, error) {

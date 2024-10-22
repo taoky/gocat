@@ -15,6 +15,7 @@
 package testing
 
 import (
+	"errors"
 	"io"
 	"net"
 
@@ -23,12 +24,12 @@ import (
 
 type TCPServer struct {
 	address         string
-	t               TestingT
+	t               T
 	msgsToBroadcast chan []byte
 	bufferSize      int
 }
 
-func NewTCPServer(t TestingT, bufferSize int, address string) *TCPServer {
+func NewTCPServer(t T, bufferSize int, address string) *TCPServer {
 	return &TCPServer{
 		address:         address,
 		t:               t,
@@ -65,7 +66,7 @@ func (ts *TCPServer) Serve(started chan<- *ListenResult) {
 
 	for {
 		c, err := ln.Accept()
-		require.Nil(ts.t, err, "Failed to accept connection")
+		require.NoError(ts.t, err, "Failed to accept connection")
 
 		go ts.handleConnection(c)
 	}
@@ -79,7 +80,7 @@ func (ts *TCPServer) handleConnection(c net.Conn) {
 	for {
 		n, err := c.Read(buf)
 		if err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				return
 			}
 
@@ -93,7 +94,7 @@ func (ts *TCPServer) handleConnection(c net.Conn) {
 
 		msg := buf[:n]
 		writtenBytes, err := c.Write(msg)
-		require.Nil(ts.t, err, "Failed to write data")
+		require.NoError(ts.t, err, "Failed to write data")
 
 		expectedWrittenBytes := len(msg)
 		if expectedWrittenBytes != writtenBytes {
